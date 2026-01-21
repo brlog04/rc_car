@@ -2,6 +2,8 @@ import hypermedia.net.*; // import UDP library
 import ketai.sensors.*;  // import Ketai Sensor library
 import ketai.ui.*;
 import ketai.net.*;
+import android.view.MotionEvent;
+
 int app_start=1;
 int DC_UPDATE = 1;//old 3 gives flickring on plane
 byte P_ID = 1;
@@ -27,6 +29,13 @@ int offsetr = 0;
 String remotIp = "255.255.255.255";  // the remote IP address
 Boolean remotIpLock = false;
 
+float objX, objY;
+float lastX1, lastY2;
+
+int rectA = 500,rectB = 60,joyPadSize = 80, buttonSize = 160;
+int x,y;
+float steering, speed;
+
 void getBroadcastAddress()
 {
   String localIp[] = {"0","0","0","0"};
@@ -40,8 +49,8 @@ void getBroadcastAddress()
 
 void setup()
 {
-  size(displayWidth,displayHeight);
   orientation(LANDSCAPE);
+  size(displayWidth, displayHeight);
   udp = new UDP( this, localPort );
   udp.listen( true );
   getBroadcastAddress();
@@ -50,8 +59,8 @@ void setup()
   sensor.start();
   objX = width / 2;
   objY = height / 2;
-  y = displayHeight;
-  x = displayWidth;
+  y = height;
+  x = width;
   steering = x/4;
   speed = y/2;
 }
@@ -111,7 +120,7 @@ void draw()
     
     //println(message[1]);
     //println(message[2]);
-    String msg = new String(message);
+   // String msg = new String(message);
     udp.send( msg, remotIp, remotPort );
     //println("msgsend");
   }
@@ -148,14 +157,6 @@ public boolean surfaceTouchEvent(MotionEvent event) {
         speed = y1;
       } 
     }
-
-   /* if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-      if (x1>x/4-rectA/2 && x1<x/4+rectA/2 && y1>2*y/3-2*rectB && y1<2*y/3+2*rectB){
-        steering = x1;
-      }
-      if (x1 > 8*x/9-2*rectB && x1 < 8*x/9+2*rectB && y1 > y/2-rectA/ 2&& y1 < y/2+rectA/2){
-        speed = y1;
-      }   */
   }
 
   if (count >= 2) {
