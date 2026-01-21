@@ -83,7 +83,15 @@ void draw()
   textSize(80);
   text("steering: " + steering,200,200);
   text("speed: " + speed,200,300);
-  
+  //steering = steering-x/4;
+  //speed = y/2-speed;
+  text("steering: " + (steering-x/4),200,400);
+  text("speed: " + (y/2-speed),200,500);
+  l_speed = (steering-x/4)<0?(int)speed-(int)(steering-x/4):(int)speed;
+  r_speed = (steering-x/4)>0?(int)speed-(int)(steering-x/4):(int)speed;
+  text("l_speed: " + l_speed,200,600);
+  text("r_speed: " + r_speed,200,700);
+    
    delay(1);
    dc_count++;
    if(dc_count >= DC_UPDATE)
