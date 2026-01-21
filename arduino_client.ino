@@ -71,7 +71,7 @@ void loop() {
       // read the packet into packetBufffer
       int len = Udp.read(packetBuffer, 10);
       if (len > 2) 
-      {
+      /*{
         if(packetBuffer[0] == P_ID)
         {
           l_speed = (unsigned int)packetBuffer[1]*2-2;
@@ -81,6 +81,33 @@ void loop() {
           //Serial.println(r_speed);
           analogWrite(L_MOTOR,l_speed);
           analogWrite(R_MOTOR,r_speed);
+          premillis_rx = millis();
+        }
+      }*/
+      {
+        char packetBuffer[20]; // dovoljno veliko za "5,-50,75"
+        int P_ID, l_speed, r_speed;
+        sscanf(packetBuffer, "%d,%d,%d", &P_ID, &l_speed, &r_speed);
+        if(P_ID == P_ID)
+        {
+          if (l_speed < 0) {
+            analogWrite(L_MOTOR_A, 0); // Set direction pin for left motor
+            analogWrite(L_MOTOR_B, -1*l_speed); // Set speed for left motor
+          } else {
+            analogWrite(L_MOTOR_A, l_speed); // Set direction pin for left motor
+            analogWrite(L_MOTOR_B, 0); // Set speed for left motor
+          }
+          if (r_speed < 0) {
+            analogWrite(R_MOTOR_A, 0); // Set direction pin for left motor
+            analogWrite(R_MOTOR_B, -1*r_speed); // Set speed for left motor
+          } else {
+            analogWrite(R_MOTOR_A, r_speed); // Set direction pin for left motor
+            analogWrite(R_MOTOR_B, 0); // Set speed for left motor
+          }
+          
+          //Serial.print(l_speed);
+          //Serial.print(" \t");
+          //Serial.println(r_speed);
           premillis_rx = millis();
         }
       }
