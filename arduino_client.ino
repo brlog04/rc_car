@@ -91,7 +91,7 @@ void loop() {
         }
       }*/
       {
-        char packetBuffer[20]; // dovoljno veliko za "5,-50,75"
+        char packetBuffer[20]; // dovoljno veliko za "5,-50,75" ovo je oblik podatka ID,L_SPEED,R_SPEED
         int P_ID, l_speed, r_speed;
         sscanf(packetBuffer, "%d,%d,%d", &P_ID, &l_speed, &r_speed);
         if(P_ID == P_ID)
