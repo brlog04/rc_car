@@ -10,8 +10,10 @@
 
 #define P_ID 1
 #define ST_LED  2
-#define L_MOTOR 5
-#define R_MOTOR 4
+#define L_MOTOR_A 3
+#define L_MOTOR_B 4
+#define R_MOTOR_A 5
+#define R_MOTOR_B 6
 #define DC_RSSI 1500  // Time in mS for send RSSI
 #define DC_RX   900   // Time in mS for tx inactivity 200 old problem of motor stopping flickring
 ADC_MODE(ADC_VCC);
@@ -37,10 +39,14 @@ void setup() {
   WiFi.mode(WIFI_STA);
   //WiFi.setOutputPower(2.5);
   analogWriteRange(255);
-  pinMode(L_MOTOR, OUTPUT);
-  pinMode(R_MOTOR, OUTPUT);
-  analogWrite(L_MOTOR,0);
-  analogWrite(R_MOTOR,0);
+  pinMode(L_MOTOR_A, OUTPUT);
+  pinMode(R_MOTOR_A, OUTPUT);
+  pinMode(L_MOTOR_B, OUTPUT);
+  pinMode(R_MOTOR_B, OUTPUT);
+  analogWrite(L_MOTOR_A,0);
+  analogWrite(R_MOTOR_A,0);
+  analogWrite(L_MOTOR_B,0);
+  analogWrite(R_MOTOR_B,0);
   pinMode(ST_LED, OUTPUT);
   digitalWrite(ST_LED,HIGH);
   //Serial.begin(115200);
@@ -127,8 +133,10 @@ void loop() {
      }
      if(millis()-premillis_rx > DC_RX)
      {
-       analogWrite(L_MOTOR,0);
-       analogWrite(R_MOTOR,0);
+       analogWrite(L_MOTOR_A,0);
+       analogWrite(R_MOTOR_A,0);
+       analogWrite(L_MOTOR_B,0);
+       analogWrite(R_MOTOR_B,0);
        //Serial.println("nodata");
      }
   }
@@ -138,8 +146,10 @@ void loop() {
     delay(60);
     digitalWrite(ST_LED,HIGH);
     delay(1000);
-    analogWrite(L_MOTOR,0);
-    analogWrite(R_MOTOR,0);
+    analogWrite(L_MOTOR_A,0);
+    analogWrite(R_MOTOR_A,0);
+    analogWrite(L_MOTOR_B,0);
+    analogWrite(R_MOTOR_B,0);
     digitalWrite(ST_LED,HIGH);
   }
 }
