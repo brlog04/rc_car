@@ -87,7 +87,7 @@ void draw()
   //speed = y/2-speed;
   text("steering: " + (steering-x/4),200,400);
   text("speed: " + (y/2-speed),200,500);
-  l_speed = (steering-x/4)<0?(int)speed-(int)(steering-x/4):(int)speed;
+  l_speed = (steering-x/4)<0?(int)speed+(int)(steering-x/4):(int)speed;
   r_speed = (steering-x/4)>0?(int)speed-(int)(steering-x/4):(int)speed;
   text("l_speed: " + l_speed,200,600);
   text("r_speed: " + r_speed,200,700);
