@@ -30,7 +30,7 @@ int keyIndex = 0;            // your network key Index number (needed only for W
 IPAddress remotIp;
 unsigned int localPort = 6000;      // local port to listen on
 unsigned int remotPort = 2390;      // local port to talk on
-char  packetBuffer[10]; //buffer to hold incoming packet
+char  packetBuffer[20]; //buffer to hold incoming packet
 char  replyBuffer[]={P_ID,0x01,0x01,0x00}; // a string to send back
 WiFiUDP Udp;
 
@@ -75,26 +75,26 @@ void loop() {
     if (packetSize) 
     {
       // read the packet into packetBufffer
-      int len = Udp.read(packetBuffer, 10);
-      if (len > 2) 
-      /*{
-        if(packetBuffer[0] == P_ID)
-        {
-          l_speed = (unsigned int)packetBuffer[1]*2-2;
-          r_speed = (unsigned int)packetBuffer[2]*2-2;
-          //Serial.print(l_speed);
-          //Serial.print(" \t");
-          //Serial.println(r_speed);
-          analogWrite(L_MOTOR,l_speed);
-          analogWrite(R_MOTOR,r_speed);
-          premillis_rx = millis();
+      int packetSize = Udp.parsePacket();
+      if (packetSize) {
+        int len = Udp.read(packetBuffer, sizeof(packetBuffer) - 1);
+        if (len > 0) {
+            packetBuffer[len] = '\0';  // OBAVEZNO
         }
-      }*/
-      {
-        char packetBuffer[20]; // dovoljno veliko za "5,-50,75" ovo je oblik podatka ID,L_SPEED,R_SPEED
-        int P_ID, l_speed, r_speed;
-        sscanf(packetBuffer, "%d,%d,%d", &P_ID, &l_speed, &r_speed);
-        if(P_ID == P_ID)
+    
+        int rp_ID, l_speed, r_speed;
+        char *token;
+        
+        token = strtok(packetBuffer, ",");
+        rp_ID = atoi(token);
+        
+        token = strtok(NULL, ",");
+        l_speed = atoi(token);
+        
+        token = strtok(NULL, ",");
+        r_speed = atoi(token);
+
+        if(rp_ID == P_ID)
         {
           if (l_speed < 0) {
             analogWrite(L_MOTOR_A, 0); // Set direction pin for left motor
