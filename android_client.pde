@@ -70,8 +70,13 @@ void draw()
   background(125,255,200);
   fill(255);
   stroke(163);
+  // steering
   rect(x/4-rectA/2,2*y/3,rectA,rectB);
+  // speed
   rect(8*x/9-rectB/2,y/2-rectA/2,rectB,rectA);
+  // black display box
+  fill(0);
+  rect(x/9,y/9,5*x/9,4*y/9);
   fill(color(50,100,255));
   circle(steering,2*y/3+rectB/2,joyPadSize);
   circle(8*x/9,speed,joyPadSize);
@@ -79,18 +84,16 @@ void draw()
   circle(2*x/3,2*y/3,buttonSize);
   fill(color(0,255,0));
   circle(x/2,2*y/3, buttonSize);
-  fill(color(0,0,255));
-  textSize(80);
-  text("steering: " + steering,200,200);
-  text("speed: " + speed,200,300);
-  //steering = steering-x/4;
-  //speed = y/2-speed;
-  text("steering: " + (steering-x/4),200,400);
-  text("speed: " + (y/2-speed),200,500);
-  l_speed = (steering-x/4)<0?(int)speed+(int)(steering-x/4):(int)speed;
-  r_speed = (steering-x/4)>0?(int)speed-(int)(steering-x/4):(int)speed;
-  text("l_speed: " + l_speed,200,600);
-  text("r_speed: " + r_speed,200,700);
+  fill(color(0,255,0));
+  textSize(y/20);
+  text("steering: " + steering,x/8,3*y/18);
+  text("speed: " + speed,x/8,4*y/18);// x=1506 y=720 honor 8A
+  text("steering: " + (steering-x/4),x/8,5*y/18);
+  text("speed: " + (y/2-speed),x/8,6*y/18);
+  l_speed = (steering-x/4)<0?(int)(y/2-speed)+(int)(steering-x/4):(int)(y/2-speed);
+  r_speed = (steering-x/4)>0?(int)(y/2-speed)-(int)(steering-x/4):(int)(y/2-speed);
+  text("l_speed: " + l_speed,x/8,7*y/18);
+  text("r_speed: " + r_speed,x/8,8*y/18);
     
    delay(1);
    dc_count++;
@@ -187,8 +190,7 @@ public boolean surfaceTouchEvent(MotionEvent event) {
         speed = y2;
       } 
     }
-
   }
-
+    
   return super.surfaceTouchEvent(event);
 }
