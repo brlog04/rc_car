@@ -206,4 +206,5 @@ public boolean surfaceTouchEvent(MotionEvent event) {
     
   return super.surfaceTouchEvent(event);
 }
+//jos jedana izmena
 //namerno napravljena izmena
