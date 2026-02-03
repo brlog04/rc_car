@@ -35,6 +35,8 @@ float lastX1, lastY2;
 int rectA = 500,rectB = 60,joyPadSize = 80, buttonSize = 160;
 int x,y;
 float steering, speed;
+long lastTouchTime = 0;
+int touchTimeoutMs = 500; // vreme u ms nakon kojeg se vracaju na pocetne vrednosti
 
 void getBroadcastAddress()
 {
@@ -67,6 +69,11 @@ void setup()
 
 void draw()
 {
+    // Ako je proslao timeout od poslednjeg dodira, vrati na pocetne vrednosti
+  if (millis() - lastTouchTime > touchTimeoutMs) {
+    steering = x/4;
+    speed = y/2;
+  }
   background(125,255,200);
   fill(255);
   stroke(163);
@@ -156,6 +163,11 @@ void receive( byte[] data, String ip, int port ) {  // <-- extended handler
 public boolean surfaceTouchEvent(MotionEvent event) {
 
   int count = event.getPointerCount();
+
+    // Ažurira vreme poslednjeg dodira
+  if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+    lastTouchTime = millis();
+  }
 
   if (count >= 1) {
     float x1 = event.getX(0);
