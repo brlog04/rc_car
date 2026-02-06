@@ -114,6 +114,7 @@ void draw()
       {
         remotIpLock=false;
         println("Connection with " + remotIp + " is lost !"); 
+        vibe.vibrate(1000);
         getBroadcastAddress(); //reset bcast address if network changed       
       }
     }
