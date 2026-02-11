@@ -32,15 +32,14 @@ Boolean remotIpLock = false;
 float objX, objY;
 float lastX1, lastY2;
 
-int rectA = 500,rectB = 60,joyPadSize = 80, buttonSize = 160;
-int x,y;
+int rectA = 500, rectB = 60, joyPadSize = 80, buttonSize = 160;
+int x, y;
 float steering, speed;
 long lastTouchTime = 0;
 int touchTimeoutMs = 500; // vreme u ms nakon kojeg se vracaju na pocetne vrednosti
 
-void getBroadcastAddress()
-{
-  String localIp[] = {"0","0","0","0"};
+void getBroadcastAddress() {
+  String localIp[] = {"0", "0", "0", "0"};
 
   if ( KetaiNet.getIP() != null)
     localIp = split(KetaiNet.getIP(), ".");
@@ -49,8 +48,7 @@ void getBroadcastAddress()
   println("Broadcast address is: " + remotIp);
 }
 
-void setup()
-{
+void setup() {
   orientation(LANDSCAPE);
   size(displayWidth, displayHeight);
   udp = new UDP( this, localPort );
@@ -67,86 +65,79 @@ void setup()
   speed = y/2;
 }
 
-void draw()
-{
-    // Ako je proslao timeout od poslednjeg dodira, vrati na pocetne vrednosti
+void draw() {
+  // Ako je proslao timeout od poslednjeg dodira, vrati na pocetne vrednosti
   if (millis() - lastTouchTime > touchTimeoutMs) {
     steering = x/4;
     speed = y/2;
   }
-  background(125,255,200);
+  background(125, 255, 200);
   fill(255);
   stroke(163);
   // steering
-  rect(x/4-rectA/2,2*y/3,rectA,rectB);
+  rect(x/4-rectA/2, 2*y/3, rectA, rectB);
   // speed
-  rect(8*x/9-rectB/2,y/2-rectA/2,rectB,rectA);
+  rect(8*x/9-rectB/2, y/2-rectA/2, rectB, rectA);
   // black display box
   fill(0);
-  rect(x/9,y/9,5*x/9,4*y/9);
-  fill(color(50,100,255));
-  circle(steering,2*y/3+rectB/2,joyPadSize);
-  circle(8*x/9,speed,joyPadSize);
-  fill(color(255,0,0));
-  circle(2*x/3,2*y/3,buttonSize);
-  fill(color(0,255,0));
-  circle(x/2,2*y/3, buttonSize);
-  fill(color(0,255,0));
+  rect(x/9, y/9, 5*x/9, 4*y/9);
+  fill(color(50, 100, 255));
+  circle(steering, 2*y/3+rectB/2, joyPadSize);
+  circle(8*x/9, speed, joyPadSize);
+  fill(color(255, 0, 0));
+  circle(2*x/3, 2*y/3, buttonSize);
+  fill(color(0, 255, 0));
+  circle(x/2, 2*y/3, buttonSize);
+  fill(color(0, 255, 0));
   textSize(y/20);
-  text("steering: " + steering,x/8,3*y/18);
-  text("speed: " + speed,x/8,4*y/18);// x=1506 y=720 honor 8A
-  text("steering: " + (steering-x/4),x/8,5*y/18);
-  text("speed: " + (y/2-speed),x/8,6*y/18);
+  text("steering: " + steering, x/8, 3*y/18);
+  text("speed: " + speed, x/8, 4*y/18);// x=1506 y=720 honor 8A
+  text("steering: " + (steering-x/4), x/8, 5*y/18);
+  text("speed: " + (y/2-speed), x/8, 6*y/18);
   l_speed = (steering-x/4)<0?(int)(y/2-speed)+(int)(steering-x/4):(int)(y/2-speed);
   r_speed = (steering-x/4)>0?(int)(y/2-speed)-(int)(steering-x/4):(int)(y/2-speed);
-  text("l_speed: " + l_speed,x/8,7*y/18);
-  text("r_speed: " + r_speed,x/8,8*y/18);
-    
-   delay(1);
-   dc_count++;
-   if(dc_count >= DC_UPDATE)
-  {
+  text("l_speed: " + l_speed, x/8, 7*y/18);
+  text("r_speed: " + r_speed, x/8, 8*y/18);
+
+  delay(1);
+  dc_count++;
+  if (dc_count >= DC_UPDATE) {
     rst_count++;
-    if(rst_count >= 200)
-    {
+    if (rst_count >= 200) {
       vcc = 0;
       rssi = 0;
-      if (remotIpLock)
-      {
+      if (remotIpLock) {
         remotIpLock=false;
-        println("Connection with " + remotIp + " is lost !"); 
-        getBroadcastAddress(); //reset bcast address if network changed       
+        println("Connection with " + remotIp + " is lost !");
+        getBroadcastAddress(); //reset bcast address if network changed
       }
     }
 
-   String msg = "" + P_ID + ",";  // prva vrednost je ID
+    String msg = "" + P_ID + ",";  // prva vrednost je ID
 
-    if(lock == 1){
+    if (lock == 1) {
       // Dodamo l_speed i r_speed kao stringove
       msg += l_speed + "," + r_speed;
 
       vib_count++;
-      if(vcc < 35 && vib_count < 5){
+      if (vcc < 35 && vib_count < 5) {
         vibe.vibrate(1000);
       }
-      if(vib_count >= 40) vib_count = 0;
-    }
-    else if(lock == 0){
+      if (vib_count >= 40) vib_count = 0;
+    } else if (lock == 0) {
       // Kada lock nije aktivan, šaljemo 1,1 kao string
       msg += "1,1";
     }
-    
+
     //println(message[1]);
     //println(message[2]);
-   // String msg = new String(message);
+    // String msg = new String(message);
     udp.send( msg, remotIp, remotPort );
     //println("msgsend");
   }
-   
 }
 
-void lockRemoteIp(String ip)
-{
+void lockRemoteIp(String ip) {
   remotIp=ip;
   remotIpLock = true;
   println("Remote ip is locked to: " + ip);
@@ -164,7 +155,7 @@ public boolean surfaceTouchEvent(MotionEvent event) {
 
   int count = event.getPointerCount();
 
-    // Ažurira vreme poslednjeg dodira
+  // Ažurira vreme poslednjeg dodira
   if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
     lastTouchTime = millis();
   }
@@ -173,12 +164,12 @@ public boolean surfaceTouchEvent(MotionEvent event) {
     float x1 = event.getX(0);
     float y1 = event.getY(0);
     if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-      if (x1>x/4-rectA/2 && x1<x/4+rectA/2 && y1>2*y/3-2*rectB && y1<2*y/3+2*rectB){
-      steering = x1;   
+      if (x1>x/4-rectA/2 && x1<x/4+rectA/2 && y1>2*y/3-2*rectB && y1<2*y/3+2*rectB) {
+        steering = x1;
       }
-      if (x1 > 8*x/9-2*rectB && x1 < 8*x/9+2*rectB && y1 > y/2-rectA/ 2&& y1 < y/2+rectA/2){
+      if (x1 > 8*x/9-2*rectB && x1 < 8*x/9+2*rectB && y1 > y/2-rectA/ 2&& y1 < y/2+rectA/2) {
         speed = y1;
-      } 
+      }
     }
   }
 
@@ -189,21 +180,21 @@ public boolean surfaceTouchEvent(MotionEvent event) {
     float y2 = event.getY(1);
 
     if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-      if (x1>x/4-rectA/2 && x1<x/4+rectA/2 && y1>2*y/3-2*rectB && y1<2*y/3+2*rectB){
-      steering = x1;   
+      if (x1>x/4-rectA/2 && x1<x/4+rectA/2 && y1>2*y/3-2*rectB && y1<2*y/3+2*rectB) {
+        steering = x1;
       }
-      if (x1 > 8*x/9-2*rectB && x1 < 8*x/9+2*rectB && y1 > y/2-rectA/ 2&& y1 < y/2+rectA/2){
+      if (x1 > 8*x/9-2*rectB && x1 < 8*x/9+2*rectB && y1 > y/2-rectA/ 2&& y1 < y/2+rectA/2) {
         speed = y1;
-      } 
-      if (x2>x/4-rectA/2 && x2<x/4+rectA/2 && y2>2*y/3-2*rectB && y2<2*y/3+2*rectB){
-      steering = x2;   
       }
-      if (x2 > 8*x/9-2*rectB && x2 < 8*x/9+2*rectB && y2 > y/2-rectA/ 2&& y2 < y/2+rectA/2){
+      if (x2>x/4-rectA/2 && x2<x/4+rectA/2 && y2>2*y/3-2*rectB && y2<2*y/3+2*rectB) {
+        steering = x2;
+      }
+      if (x2 > 8*x/9-2*rectB && x2 < 8*x/9+2*rectB && y2 > y/2-rectA/ 2&& y2 < y/2+rectA/2) {
         speed = y2;
-      } 
+      }
     }
   }
-    
+
   return super.surfaceTouchEvent(event);
 }
 // comment added
