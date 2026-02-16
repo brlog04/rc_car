@@ -10,10 +10,10 @@
 
 #define P_ID 1
 #define ST_LED  2
-#define L_MOTOR_A 3
-#define L_MOTOR_B 4
-#define R_MOTOR_A 5
-#define R_MOTOR_B 6
+#define L_MOTOR_A 4
+#define L_MOTOR_B 5
+#define R_MOTOR_A 12
+#define R_MOTOR_B 14
 #define DC_RSSI 1500  // Time in mS for send RSSI
 #define DC_RX   900   // Time in mS for tx inactivity 200 old problem of motor stopping flickring
 ADC_MODE(ADC_VCC);
@@ -24,8 +24,8 @@ unsigned long premillis_rssi = 0;
 unsigned long premillis_rx   = 0;
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "wifiplane";   //  your network SSID (name)
-char pass[] = "wifiplane1234";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "Honor 8A";   //  your network SSID (name)
+char pass[] = "Darko123";    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 IPAddress remotIp;
 unsigned int localPort = 6000;      // local port to listen on
@@ -38,15 +38,6 @@ WiFiUDP Udp;
 void setup() {
   WiFi.mode(WIFI_STA);
   //WiFi.setOutputPower(2.5);
-  analogWriteRange(255);
-  pinMode(L_MOTOR_A, OUTPUT);
-  pinMode(R_MOTOR_A, OUTPUT);
-  pinMode(L_MOTOR_B, OUTPUT);
-  pinMode(R_MOTOR_B, OUTPUT);
-  analogWrite(L_MOTOR_A,0);
-  analogWrite(R_MOTOR_A,0);
-  analogWrite(L_MOTOR_B,0);
-  analogWrite(R_MOTOR_B,0);
   pinMode(ST_LED, OUTPUT);
   digitalWrite(ST_LED,HIGH);
   //Serial.begin(115200);
@@ -59,6 +50,7 @@ void setup() {
     delay(1000);
     //Serial.print(".");
   }
+  //Serial.print("connected");
   remotIp=WiFi.localIP();
   remotIp[3] = 255;
   Udp.begin(localPort);
@@ -110,7 +102,8 @@ void loop() {
             analogWrite(R_MOTOR_A, r_speed); // Set direction pin for left motor
             analogWrite(R_MOTOR_B, 0); // Set speed for left motor
           }
-          
+
+          //Serial.println("len:"+len);
           //Serial.print(l_speed);
           //Serial.print(" \t");
           //Serial.println(r_speed);
@@ -146,10 +139,7 @@ void loop() {
     delay(60);
     digitalWrite(ST_LED,HIGH);
     delay(1000);
-    analogWrite(L_MOTOR_A,0);
-    analogWrite(R_MOTOR_A,0);
-    analogWrite(L_MOTOR_B,0);
-    analogWrite(R_MOTOR_B,0);
+    //Serial.println("else");
     digitalWrite(ST_LED,HIGH);
   }
 }
